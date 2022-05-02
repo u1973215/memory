@@ -1,9 +1,11 @@
 function start_game(){
 	name = prompt("User name");
+	if(name != "null") //Al apretar cancel, no fa res
+	{
+		sessionStorage.setItem("username", name);
 	
-	sessionStorage.setItem("username", name);
-	
-	loadpage("./html/game.html");
+		loadpage("./html/game.html");
+	}
 }
 
 function phaser_game(){

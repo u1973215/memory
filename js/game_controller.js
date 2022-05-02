@@ -15,7 +15,9 @@ var gameObj = function (){
 			current_card: [],
 			items: [],
 			num_cards: 2,
-			bad_clicks: 0
+			bad_clicks: 0,
+			////////////////////////////////////////
+			dif_mult: 20
 		},
 		created: function(){
 			if (l_partida){
@@ -26,6 +28,28 @@ var gameObj = function (){
 				this.bad_clicks = l_partida.bad_clicks;
 			}
 			else{
+				////////////////////////////////////////
+				var json = localStorage.getItem("config") || '{"cards": 2,"dificulty": "hard"}';
+				options_data = JSON.parse(json);
+				this.num_cards = options_data.cards;
+
+				switch (options_data.dificulty)
+				{
+					case "easy":
+						this.dif_mult = 10;
+						break;
+
+					case "normal":
+						this.dif_mult = 20;
+						break;
+
+					case "hard":
+						this.dif_mult = 40;
+						break;
+				}
+				console.log(this.dif_mult);
+				////////////////////////////////////////
+
 				this.username = sessionStorage.getItem("username","unknown");
 				this.items = items.slice(); // Copiem l'array
 				this.items.sort(function(){return Math.random() - 0.5}); // Array aleatòria
@@ -43,6 +67,14 @@ var gameObj = function (){
 				if (!this.current_card[i].done && this.current_card[i].texture === back)
 					Vue.set(this.current_card, i, {done: false, texture: this.items[i]});
 			},
+
+			////////////////////////////////////////
+			amagarCarta: function()
+			{
+				Vue.set(this.current_card, i_front, {done: false, texture: back});
+			},
+			////////////////////////////////////////
+
 			save: function(){
 				fetch("../php/save.php", {
 					method: "POST",
