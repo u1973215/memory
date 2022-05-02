@@ -1,39 +1,80 @@
-input[type=number]{
-	height: 3rem;
-    font-size: 1.3rem;
-    font-weight: bold;
-    width: 3rem;
-    text-align: center;
+body
+{
+	background-color: #ddeeee;
 }
 
-#title{
-	font-size: 26px;
+#title
+{
+	height: auto;
+	font-size: 4em;
 	line-height: 75px;
+	grid-area: title;
 }
 
-.menu-object{
-	display:block;
-	margin-left: auto;
-	margin-right: auto;
-	width: 300px;
+.menu
+{
+	margin: 20vh 20% 0 20%;
+	display: grid;
+	grid-template-columns: repeat(3,1fr);
+	grid-template-areas:
+		'. title .'
+		'left middle right'
+		'. cookie .';
+	gap: 30px;
+	align-items: center;
+}
+
+.menu-object
+{
+	display: block;
+	margin: 2vh auto;
+	width: 325px;
 	height: 75px;
-	font-size: 16px;
-	margin-top: 10px;
-}
-
-p{
+	font-size: 1.4em;
+	font-family: monospace;
 	text-align: center;
 }
 
-button.menu-object:active{
-	font-size: 18px;
-	width: 275px;
-	height: 70px;
+#cookie-section
+{
+	grid-area: cookie;
+	margin-top: 65vh;
 }
 
-button.menu-object:hover:not(:active){
-	font-size: 22px;
+.pracs { grid-area: middle; }
+#start { grid-area: left; }
+#options { grid-area: middle; }
+#exit { grid-area: right; }
+
+p, h1
+{
+	text-align: center;
+	font-family: monospace;
+}
+
+button.menu-object:active
+{
+	width: 250px;
+	background-color: #b3e85d;
+}
+
+button.menu-object:hover:not(:active)
+{
+	font-weight: bold;
 	width: 325px;
-	height: 85px;
+	background-color: #eaf2c7;
+}
+
+#game
+{
+	width: auto;
+	margin: 1em auto;
+	display: flex;
+	justify-content: center;
+}
+
+#game img
+{
+	margin-right: 10px;
 }
 
