@@ -1,10 +1,18 @@
 function start_game(){
 	name = prompt("User name");
-	if(name != "null") //Al apretar cancel, no fa res
+	if(name != "null") // Al apretar cancel, no fa res
 	{
-		sessionStorage.setItem("username", name);
+		var nameProcessed = name.replace(/\s/g, '') // Esborra els espais del nom en una variable temporal
+		if(nameProcessed.length == 0) // Si el string resultant es buit, el nom no es valid
+		{
+			alert("Please enter a valid name")
+		}
+		else
+		{
+			sessionStorage.setItem("username", name);
 	
-		loadpage("./html/game.html");
+			loadpage("./html/game.html");
+		}
 	}
 }
 

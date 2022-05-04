@@ -1,13 +1,38 @@
+
+@font-face {
+	font-family: titleSketch;
+	src: url("../resources/fonts/Sketch\ Book.ttf");
+}
+
+@font-face {
+	font-family: smallSketch;
+	src: url("../resources/fonts/Serif\ Sketch.ttf");
+}
+
+
 body
 {
 	background-color: #ddeeee;
+	background-image: url("../resources/paper.jpg");
+	background-position: center;
+	height: 900px;
+	/*background-repeat: no-repeat;*/
+	background-size: cover;
+}
+
+a
+{
+	text-decoration: none;
+	color: #3d88ae;
 }
 
 #title
 {
+	font-family: titleSketch;
 	height: auto;
-	font-size: 4em;
-	line-height: 75px;
+	width: 500px;
+	font-size: 6em;
+	line-height: 1em;
 	grid-area: title;
 }
 
@@ -31,7 +56,7 @@ body
 	width: 325px;
 	height: 75px;
 	font-size: 1.4em;
-	font-family: monospace;
+	font-family: smallSketch;
 	text-align: center;
 }
 
@@ -52,29 +77,50 @@ p, h1
 	font-family: monospace;
 }
 
+button.menu-object
+{
+	background: url("../resources/button.png") no-repeat 0 0 transparent;
+	background-position: center;
+	background-size: contain;
+
+	border: none;
+	background-color: none;
+
+	cursor: pointer;
+}
+
 button.menu-object:active
 {
-	width: 250px;
-	background-color: #b3e85d;
+	background: url("../resources/buttonClick.png") no-repeat 0 0 transparent;
+	background-position: center;
+	background-size: contain;
 }
 
 button.menu-object:hover:not(:active)
 {
 	font-weight: bold;
-	width: 325px;
-	background-color: #eaf2c7;
+	background: url("../resources/buttonHover.png") no-repeat 0 0 transparent;
+	background-position: center;
+	background-size: contain;
 }
 
-#game
+#game, #game_area
 {
 	width: auto;
-	margin: 1em auto;
+	margin: 5em auto;
 	display: flex;
 	justify-content: center;
+}
+
+canvas
+{
+	border-style: solid;
+	border-width: 10px;
 }
 
 #game img
 {
 	margin-right: 10px;
+	width: 200px;
 }
 

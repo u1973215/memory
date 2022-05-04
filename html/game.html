@@ -13,7 +13,10 @@
 				You WIN!!! with {{score_text}} points
 			</p>
 			<div v-else>
-				<img v-for="(card, indx) in current_card" :src="card.texture" v-on:click="clickCard(indx)">
+				<div id="game">
+					<img v-for="(card, indx) in current_card" :src="card.texture" v-on:click="clickCard(indx)">
+				</div>
+				
 				<button class="menu-object" v-on:click="save"> Save </button>
 			</div>
 		</div>

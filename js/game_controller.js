@@ -109,7 +109,7 @@ var gameObj = function (){
 				}
 				arrayPartides.push(partida);
 				localStorage.partides = JSON.stringify(arrayPartides);
-				loadpage("../");
+				loadpage("../index.html");
 			}
 		},
 		watch: {

@@ -5,6 +5,7 @@ class GameScene extends Phaser.Scene {
 		this.firstClick = null;
 		this.score = 100;
 		this.correct = 0;
+		this.cardPairs = 2;
     }
 
     preload (){	
@@ -18,20 +19,36 @@ class GameScene extends Phaser.Scene {
 	}
 	
     create (){	
-		let arraycards = ['co', 'sb', 'co', 'sb'];
-		this.cameras.main.setBackgroundColor(0xBFFCFF);
-		
-		this.add.image(250, 300, arraycards[0]);
-		this.add.image(350, 300, arraycards[1]);
-		this.add.image(450, 300, arraycards[2]);
-		this.add.image(550, 300, arraycards[3]);
+		let arraycards = ['cb', 'co', 'sb', 'so', 'tb', 'to'];
+		this.cameras.main.setBackgroundColor(0xF2F2CE);
 		
 		this.cards = this.physics.add.staticGroup();
-		
-		this.cards.create(250, 300, 'back');
-		this.cards.create(350, 300, 'back');
-		this.cards.create(450, 300, 'back');
-		this.cards.create(550, 300, 'back');
+
+		var totalCards = this.cardPairs * 2;
+
+		var cardWidth = game.config.width / totalCards;
+		var cardHeight = game.config.height / this.cardPairs;
+
+		/*var cardSpacingX = 100;
+		var cardSpacingY = 2;*/
+		var startX = game.config.width / 2 - cardWidth * 0.5;
+		var startY = game.config.height / 2 - cardHeight * 0.5;
+
+		let fils = 0, cols = 0;
+		for(let i = 0; i < totalCards; i++) // matriu
+		{
+			let randomCard = getRandomInt(0,arraycards.length);
+
+			let aux = this.add.sprite(startX+cols*cardWidth, startY+fils*cardHeight, arraycards[randomCard]);
+			aux.displayWidth = cardWidth;
+			aux.scaleY=aux.scaleX;
+			/*
+			aux = this.cards.create(startX+i*cardSpacingX, 300, 'back');
+			aux.displayWidth=game.config.width*0.4/this.cardPairs;
+			aux.scaleY=aux.scaleX;
+			*/
+
+		}
 		
 		let i = 0;
 		this.cards.children.iterate((card)=>{
@@ -69,3 +86,7 @@ class GameScene extends Phaser.Scene {
 	update (){	}
 }
 
+function getRandomInt(min, max)
+{
+	return Math.floor(Math.random() * (max-min)) + min;
+}
