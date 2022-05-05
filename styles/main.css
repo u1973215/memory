@@ -107,7 +107,7 @@ button.menu-object:hover:not(:active)
 #game, #game_area
 {
 	width: auto;
-	margin: 5em auto;
+	margin: 3em auto;
 	display: flex;
 	justify-content: center;
 }

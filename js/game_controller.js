@@ -29,7 +29,7 @@ var gameObj = function (){
 			}
 			else{
 				////////////////////////////////////////
-				var json = localStorage.getItem("config") || '{"cards": 2,"dificulty": "hard"}';
+				var json = localStorage.getItem("config") || '{"cards": 3,"dificulty": "hard"}';
 				options_data = JSON.parse(json);
 				this.num_cards = options_data.cards;
 

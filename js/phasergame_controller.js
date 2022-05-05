@@ -1,7 +1,7 @@
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 600,
+    height: 500,
     parent: 'game_area',
 	physics: {
 		default: 'arcade',
@@ -14,4 +14,5 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+
 

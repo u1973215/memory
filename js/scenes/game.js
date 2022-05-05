@@ -12,8 +12,28 @@ class GameScene extends Phaser.Scene
 		this.username ='';
 		this.current_card = [];
 		this.items = [];
-		this.num_cards = 100;
+		this.num_cards = 3;
 		this.bad_clicks = 0;
+
+		this.local_save = () =>
+		{
+			let partida = {
+				username: this.username,
+				current_card: this.current_card,
+				items: this.items,
+				num_cards: this.num_cards,
+				bad_clicks: this.bad_clicks
+			}
+			let arrayPartides = [];
+			if(localStorage.partides){
+				arrayPartides = JSON.parse(localStorage.partides);
+				if(!Array.isArray(arrayPartides)) arrayPartides = [];
+			}
+			arrayPartides.push(partida);
+			localStorage.partides = JSON.stringify(arrayPartides);
+			alert("NO");
+			loadpage("../index.html");
+		}
     }
 
     preload ()
@@ -29,6 +49,10 @@ class GameScene extends Phaser.Scene
 	
     create ()
 	{
+		var saveButton = document.getElementById("save-button");
+		saveButton.addEventListener("click", () => this.local_save());
+
+
 		let l_partida = null;
 
 		if (sessionStorage.idPartida && localStorage.partides)
@@ -37,7 +61,7 @@ class GameScene extends Phaser.Scene
 			if (sessionStorage.idPartida < arrayPartides.length)
 				l_partida = arrayPartides[sessionStorage.idPartida];
 		}
-
+		
 		if (l_partida){
 			this.username = l_partida.username;
 			this.current_card = l_partida.current_card;
@@ -45,6 +69,41 @@ class GameScene extends Phaser.Scene
 			this.num_cards = l_partida.num_cards;
 			this.bad_clicks = l_partida.bad_clicks;
 		}
+		else{
+			////////////////////////////////////////
+			var json = localStorage.getItem("config") || '{"cards": 3,"dificulty": "hard"}';
+			options_data = JSON.parse(json);
+			this.num_cards = options_data.cards;
+
+			switch (options_data.dificulty)
+			{
+				case "easy":
+					this.dif_mult = 10;
+					break;
+
+				case "normal":
+					this.dif_mult = 20;
+					break;
+
+				case "hard":
+					this.dif_mult = 40;
+					break;
+			}
+			console.log(this.dif_mult);
+			////////////////////////////////////////
+
+			this.username = sessionStorage.getItem("username","unknown");
+		}
+		sessionStorage.clear();
+		
+		if (l_partida){
+			this.username = l_partida.username;
+			this.current_card = l_partida.current_card;
+			this.items = l_partida.items;
+			this.num_cards = l_partida.num_cards;
+			this.bad_clicks = l_partida.bad_clicks;
+		}
+
 
 		var arraycards = ['cb', 'co', 'sb', 'so', 'tb', 'to']; // inicialment, arraycards conte totes les possibles cartes
 		this.cameras.main.setBackgroundColor(0xF2F2CE);
@@ -178,6 +237,7 @@ class GameScene extends Phaser.Scene
 				}
 			}, card);
 		});
+
 	}
 	
 	update (){	}

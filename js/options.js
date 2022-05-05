@@ -1,10 +1,10 @@
 var options = function(){
 	// Aquí dins hi ha la part privada de l'objecte
 	var options_data = {
-		cards:2, dificulty:"hard"
+		cards:3, dificulty:"hard"
 	};
 	var load = function(){
-		var json = localStorage.getItem("config") || '{"cards":2,"dificulty":"hard"}';
+		var json = localStorage.getItem("config") || '{"cards":3,"dificulty":"hard"}';
 		options_data = JSON.parse(json);
 	};
 	var save = function(){
@@ -14,7 +14,7 @@ var options = function(){
 	var vue_instance = new Vue({
 		el: "#options_id",
 		data: {
-			num: 2,
+			num: 3,
 			dificulty: "normal"
 		},
 		created: function(){
@@ -25,8 +25,8 @@ var options = function(){
 			num: function(value){
 				if (value < 2)
 					this.num = 2;
-				else if (value > 4)
-					this.num = 4;
+				else if (value > 1000)
+					this.num = 1000;
 			}
 		},
 		methods: { 

@@ -13,9 +13,20 @@ var load_obj = function(){
 			this.saves = arrayPartides;
 		},
 		methods: { 
-			load: function(i){
+			load: function(i)
+			{
 				sessionStorage.idPartida = i;
-				loadpage("../html/game.html");
+				loadpage("../html/phasergame.html");
+			},
+
+			delAll: function()
+			{
+				var confirm = prompt('Are you sure you want to DELETE ALL SAVE FILES?\nType "CONFIRM" to proceed.');
+				if(confirm == "CONFIRM") // Al apretar cancel o fallar, no fa res
+				{
+					localStorage.removeItem("partides");
+					location.reload();
+				}
 			}
 		}
 	});
