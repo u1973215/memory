@@ -12,10 +12,10 @@ class GameScene extends Phaser.Scene
 		this.username ='';
 		this.current_card = [];
 		this.items = [];
-		this.num_cards = 3;
+		this.num_cards = 1;
 		this.bad_clicks = 0;
 
-		this.local_save = () =>
+		this.local_save = function()
 		{
 			let partida = {
 				username: this.username,
@@ -24,6 +24,7 @@ class GameScene extends Phaser.Scene
 				num_cards: this.num_cards,
 				bad_clicks: this.bad_clicks
 			}
+			alert(this.username);
 			let arrayPartides = [];
 			if(localStorage.partides){
 				arrayPartides = JSON.parse(localStorage.partides);
@@ -52,11 +53,11 @@ class GameScene extends Phaser.Scene
 		var saveButton = document.getElementById("save-button");
 		saveButton.addEventListener("click", () => this.local_save());
 
-
 		let l_partida = null;
 
 		if (sessionStorage.idPartida && localStorage.partides)
 		{
+			console.log("exiteix la partida");
 			let arrayPartides = JSON.parse(localStorage.partides);
 			if (sessionStorage.idPartida < arrayPartides.length)
 				l_partida = arrayPartides[sessionStorage.idPartida];
@@ -68,11 +69,12 @@ class GameScene extends Phaser.Scene
 			this.items = l_partida.items;
 			this.num_cards = l_partida.num_cards;
 			this.bad_clicks = l_partida.bad_clicks;
+			console.log("partida found");
 		}
 		else{
 			////////////////////////////////////////
 			var json = localStorage.getItem("config") || '{"cards": 3,"dificulty": "hard"}';
-			options_data = JSON.parse(json);
+			var options_data = JSON.parse(json);
 			this.num_cards = options_data.cards;
 
 			switch (options_data.dificulty)
@@ -93,16 +95,9 @@ class GameScene extends Phaser.Scene
 			////////////////////////////////////////
 
 			this.username = sessionStorage.getItem("username","unknown");
+			console.log(this.username);
 		}
 		sessionStorage.clear();
-		
-		if (l_partida){
-			this.username = l_partida.username;
-			this.current_card = l_partida.current_card;
-			this.items = l_partida.items;
-			this.num_cards = l_partida.num_cards;
-			this.bad_clicks = l_partida.bad_clicks;
-		}
 
 
 		var arraycards = ['cb', 'co', 'sb', 'so', 'tb', 'to']; // inicialment, arraycards conte totes les possibles cartes

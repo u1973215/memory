@@ -19,19 +19,19 @@ function start_game(){
 function phaser_game()
 {
 	name = prompt("User name");
-	if(name != "null") // Al apretar cancel, no fa res
+	if (name != "null") // Al apretar cancel, no fa res
 	{
-		var nameProcessed = name.replace(/\s/g, '') // Esborra els espais del nom en una variable temporal
-		if(nameProcessed.length == 0) // Si el string resultant es buit, el nom no es valid
+		var nameProcessed = name.replace(/\s/g, ''); // Esborra els espais del nom en una variable temporal
+		while (nameProcessed.length == 0) // Si el string resultant es buit, el nom no es valid
 		{
 			alert("Please enter a valid name")
+			name = prompt("User name");
+			if (name == "null") return;
+			nameProcessed = name.replace(/\s/g, '');
 		}
-		else
-		{
-			sessionStorage.setItem("username", name);
-	
-			loadpage("./html/phasergame.html");
-		}
+		sessionStorage.setItem("username", name);
+
+		loadpage("./html/phasergame.html");
 	}
 }
 
