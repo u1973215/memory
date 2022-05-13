@@ -9,14 +9,18 @@ class GameScene extends Phaser.Scene
 		this.score = 100;
 		this.correct = 0;
 
-		this.username ='';
+		this.username = '';
 		this.current_card = [];
 		this.items = [];
 		this.num_cards = 1;
 		this.bad_clicks = 0;
 
-		this.local_save = function()
+		this.cooldown = 1000;
+		this.wait = 0; // es poden girar cartes des de l'inici
+
+		this.local_save = () =>
 		{
+			//console.log(this);
 			let partida = {
 				username: this.username,
 				current_card: this.current_card,
@@ -24,7 +28,6 @@ class GameScene extends Phaser.Scene
 				num_cards: this.num_cards,
 				bad_clicks: this.bad_clicks
 			}
-			alert(this.username);
 			let arrayPartides = [];
 			if(localStorage.partides){
 				arrayPartides = JSON.parse(localStorage.partides);
@@ -32,7 +35,6 @@ class GameScene extends Phaser.Scene
 			}
 			arrayPartides.push(partida);
 			localStorage.partides = JSON.stringify(arrayPartides);
-			alert("NO");
 			loadpage("../index.html");
 		}
     }
@@ -51,7 +53,7 @@ class GameScene extends Phaser.Scene
     create ()
 	{
 		var saveButton = document.getElementById("save-button");
-		saveButton.addEventListener("click", () => this.local_save());
+		saveButton.addEventListener("click", this.local_save);
 
 		let l_partida = null;
 
@@ -91,13 +93,12 @@ class GameScene extends Phaser.Scene
 					this.dif_mult = 40;
 					break;
 			}
-			console.log(this.dif_mult);
+			//console.log(this.dif_mult);
 			////////////////////////////////////////
 
 			this.username = sessionStorage.getItem("username","unknown");
-			console.log(this.username);
+			//console.log(this);
 		}
-		sessionStorage.clear();
 
 
 		var arraycards = ['cb', 'co', 'sb', 'so', 'tb', 'to']; // inicialment, arraycards conte totes les possibles cartes
@@ -111,8 +112,8 @@ class GameScene extends Phaser.Scene
 		var fils = Math.round(Math.sqrt(totalCards));
 		var cols = Math.ceil(Math.sqrt(totalCards));
 
-		console.log(totalCards);
-		console.log(fils, cols);
+		//console.log(totalCards);
+		//console.log(fils, cols);
 		
 		var cardsOnPlay = arraycards.slice(); // Copiem l'array
 		while (cardsOnPlay.length < this.num_cards)
@@ -130,7 +131,7 @@ class GameScene extends Phaser.Scene
 
 		for (var i = 0; i < cardsOnPlay.length; i++)
 		{
-			console.log(cardsOnPlay[i]);
+			//console.log(cardsOnPlay[i]);
 		}
 
 		var spaceMult = 0.9;
@@ -198,6 +199,11 @@ class GameScene extends Phaser.Scene
 		
 		var i = 0;
 		this.cards.children.iterate((card)=>{
+			var hideCards = () =>
+			{
+				this.firstClick.enableBody(false, 0, 0, true, true);
+				card.enableBody(false, 0, 0, true, true);
+			}
 			card.card_id = arraycards[i];
 			i++;
 			card.setInteractive();
@@ -207,8 +213,7 @@ class GameScene extends Phaser.Scene
 					if (this.firstClick.card_id !== card.card_id)
 					{
 						this.score -= 40/this.num_cards;
-						this.firstClick.enableBody(false, 0, 0, true, true);
-						card.enableBody(false, 0, 0, true, true);
+						this.time.delayedCall(this.cooldown, hideCards, this);
 						if (this.score <= 0)
 						{
 							alert("Game Over");
@@ -235,10 +240,14 @@ class GameScene extends Phaser.Scene
 
 	}
 	
-	update (){	}
+	update ()
+	{
+
+	}
 }
 
 function getRandomInt(min, max) // (exemple de funcio normal fora de la classe)
 {
 	return Math.floor(Math.random() * (max-min)) + min;
 }
+
