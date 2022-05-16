@@ -1,5 +1,5 @@
 function loadpage(url){
-	sessionStorage.clear();
+	//sessionStorage.clear();
 	window.location.assign(url);
 }
 

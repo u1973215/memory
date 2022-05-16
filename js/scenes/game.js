@@ -15,7 +15,7 @@ class GameScene extends Phaser.Scene
 		this.num_cards = 1;
 		this.bad_clicks = 0;
 
-		this.cooldown = 1000;
+		this.cooldown = 500;
 		this.wait = 0; // es poden girar cartes des de l'inici
 
 		this.local_save = () =>
@@ -197,43 +197,57 @@ class GameScene extends Phaser.Scene
 			}
 		}
 		
+		var canClick = true;
 		var i = 0;
 		this.cards.children.iterate((card)=>{
 			var hideCards = () =>
 			{
+				console.log(this);
 				this.firstClick.enableBody(false, 0, 0, true, true);
 				card.enableBody(false, 0, 0, true, true);
 			}
+
+			var processSecondCard = () =>
+			{
+				if (this.firstClick.card_id !== card.card_id)
+				{
+					this.score -= 40/this.num_cards;
+					hideCards();
+					if (this.score <= 0)
+					{
+						alert("Game Over");
+						loadpage("../");
+					}
+				}
+				else
+				{
+					this.correct++;
+					if (this.correct >= this.num_cards)
+					{
+						alert("You Win with " + Math.round(this.score) + " points.");
+						loadpage("../");
+					}
+				}
+				this.firstClick = null;
+				canClick = true;
+			}
+
 			card.card_id = arraycards[i];
 			i++;
 			card.setInteractive();
 			card.on('pointerup', () => {
-				card.disableBody(true,true);
-				if (this.firstClick){
-					if (this.firstClick.card_id !== card.card_id)
+				if (canClick)
+				{
+					card.disableBody(true,true);
+					if (this.firstClick)
 					{
-						this.score -= 40/this.num_cards;
-						this.time.delayedCall(this.cooldown, hideCards, this);
-						if (this.score <= 0)
-						{
-							alert("Game Over");
-							loadpage("../");
-						}
+						canClick = false;
+						this.time.delayedCall(this.cooldown, processSecondCard, this);
 					}
 					else
 					{
-						this.correct++;
-						if (this.correct >= this.num_cards)
-						{
-							alert("You Win with " + Math.round(this.score) + " points.");
-							loadpage("../");
-						}
+						this.firstClick = card;
 					}
-					this.firstClick = null;
-				}
-				else
-				{
-					this.firstClick = card;
 				}
 			}, card);
 		});
