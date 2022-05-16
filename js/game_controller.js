@@ -15,28 +15,6 @@ var gameObj = function (){
 				this.username = l_partida.username;
 			}
 			else{
-				/*
-				var json = localStorage.getItem("config") || '{"cards": 3,"dificulty": "hard"}';
-				options_data = JSON.parse(json);
-				this.num_cards = options_data.cards;
-
-				switch (options_data.dificulty)
-				{
-					case "easy":
-						this.dif_mult = 10;
-						break;
-
-					case "normal":
-						this.dif_mult = 20;
-						break;
-
-					case "hard":
-						this.dif_mult = 40;
-						break;
-				}
-				console.log(this.dif_mult);
-				*/
-
 				this.username = sessionStorage.getItem("username","unknown");
 			}
 			//sessionStorage.clear();

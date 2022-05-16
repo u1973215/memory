@@ -4,38 +4,40 @@ class GameScene extends Phaser.Scene
     constructor ()
 	{
         super('GameScene');
-		this.cards = null;
-		this.firstClick = null;
-		this.score = 100;
-		this.correct = 0;
-
 		this.username = '';
-		this.current_card = [];
+		this.num_pairs = 1;
 		this.items = [];
-		this.num_cards = 1;
-		this.bad_clicks = 0;
-
+		this.cards = null; // objectes carta: no es poden carregar ni tan sols transformar a JSON
+		this.cardsInfo = []; // informacio que ens interessa de this.cards (cada item = {done: false})
+		this.firstClick = null; // carta del primer click (objecte)
+		this.currentCard = null; // carta del primer click (posicio de la carta dins cardsInfo)
+		this.score = 100; 
+		this.correct = 0;
+		
 		this.cooldown = 500;
-		this.wait = 0; // es poden girar cartes des de l'inici
 
 		this.local_save = () =>
 		{
-			//console.log(this);
+			console.log(this);
 			let partida = {
 				username: this.username,
-				current_card: this.current_card,
+				num_pairs: this.num_pairs,
+				cards: this.cards,
 				items: this.items,
-				num_cards: this.num_cards,
-				bad_clicks: this.bad_clicks
+				firstClick: this.firstClick,
+				score: this.score,
+				correct: this.correct
 			}
+			console.log(partida);
 			let arrayPartides = [];
 			if(localStorage.partides){
 				arrayPartides = JSON.parse(localStorage.partides);
 				if(!Array.isArray(arrayPartides)) arrayPartides = [];
 			}
 			arrayPartides.push(partida);
+			console.log(arrayPartides);
 			localStorage.partides = JSON.stringify(arrayPartides);
-			loadpage("../index.html");
+			//loadpage("../index.html");
 		}
     }
 
@@ -52,8 +54,13 @@ class GameScene extends Phaser.Scene
 	
     create ()
 	{
+		this.cameras.main.setBackgroundColor(0xF2F2CE);
+
 		var saveButton = document.getElementById("save-button");
 		saveButton.addEventListener("click", this.local_save);
+
+		this.cards = this.physics.add.staticGroup();
+		this.items = ['cb', 'co', 'sb', 'so', 'tb', 'to']; // inicialment, this.items conte totes les possibles cartes
 
 		let l_partida = null;
 
@@ -66,18 +73,20 @@ class GameScene extends Phaser.Scene
 		}
 		
 		if (l_partida){
-			this.username = l_partida.username;
-			this.current_card = l_partida.current_card;
-			this.items = l_partida.items;
-			this.num_cards = l_partida.num_cards;
-			this.bad_clicks = l_partida.bad_clicks;
+			this.username = l_partida.username,
+			this.num_pairs = l_partida.num_pairs,
+			this.cards = l_partida.cards,
+			this.items = l_partida.items,
+			this.firstClick = l_partida.firstClick,
+			this.score = l_partida.score,
+			this.correct = l_partida.correct
 			console.log("partida found");
 		}
 		else{
 			////////////////////////////////////////
 			var json = localStorage.getItem("config") || '{"cards": 3,"dificulty": "hard"}';
 			var options_data = JSON.parse(json);
-			this.num_cards = options_data.cards;
+			this.num_pairs = options_data.cards;
 
 			switch (options_data.dificulty)
 			{
@@ -99,14 +108,9 @@ class GameScene extends Phaser.Scene
 			this.username = sessionStorage.getItem("username","unknown");
 			//console.log(this);
 		}
+		sessionStorage.clear();
 
-
-		var arraycards = ['cb', 'co', 'sb', 'so', 'tb', 'to']; // inicialment, arraycards conte totes les possibles cartes
-		this.cameras.main.setBackgroundColor(0xF2F2CE);
-		
-		this.cards = this.physics.add.staticGroup();
-
-		var totalCards = this.num_cards * 2;
+		var totalCards = this.num_pairs * 2;
 
 		// do magic here
 		var fils = Math.round(Math.sqrt(totalCards));
@@ -115,19 +119,19 @@ class GameScene extends Phaser.Scene
 		//console.log(totalCards);
 		//console.log(fils, cols);
 		
-		var cardsOnPlay = arraycards.slice(); // Copiem l'array
-		while (cardsOnPlay.length < this.num_cards)
+		var cardsOnPlay = this.items.slice(); // Copiem l'array
+		while (cardsOnPlay.length < this.num_pairs)
 		{
 			cardsOnPlay = cardsOnPlay.concat(cardsOnPlay); // Dupliquem els elements
 			// La mida augmenta exponencialment, arriba a numcards abans i el slice s'encarregara de la resta
 		}
 		cardsOnPlay.sort(function(){return Math.random() - 0.5}); // Array aleatòria
-		cardsOnPlay = cardsOnPlay.slice(0, this.num_cards); // Agafem els primers numCards elements
+		cardsOnPlay = cardsOnPlay.slice(0, this.num_pairs); // Agafem els primers numCards elements
 		cardsOnPlay = cardsOnPlay.concat(cardsOnPlay); // Dupliquem els elements
 		cardsOnPlay.sort(function(){return Math.random() - 0.5}); // Array aleatòria
 
-		arraycards = cardsOnPlay.slice(); // despres de generar les cartes que posarem al tauler, arraycards agafa aquest array generat
-		// arraycards es mantindra inalterat fins que posem totes les cartes i backs, cardsOnPlay anira perdent cada vegada el seu primer element
+		this.items = cardsOnPlay.slice(); // despres de generar les cartes que posarem al tauler, this.items agafa aquest array generat
+		// this.items es mantindra inalterat fins que posem totes les cartes i backs, cardsOnPlay anira perdent cada vegada el seu primer element
 
 		for (var i = 0; i < cardsOnPlay.length; i++)
 		{
@@ -199,10 +203,12 @@ class GameScene extends Phaser.Scene
 		
 		var canClick = true;
 		var i = 0;
+		
+
 		this.cards.children.iterate((card)=>{
 			var hideCards = () =>
 			{
-				console.log(this);
+				//console.log(this);
 				this.firstClick.enableBody(false, 0, 0, true, true);
 				card.enableBody(false, 0, 0, true, true);
 			}
@@ -211,7 +217,7 @@ class GameScene extends Phaser.Scene
 			{
 				if (this.firstClick.card_id !== card.card_id)
 				{
-					this.score -= 40/this.num_cards;
+					this.score -= 40/this.num_pairs;
 					hideCards();
 					if (this.score <= 0)
 					{
@@ -222,7 +228,7 @@ class GameScene extends Phaser.Scene
 				else
 				{
 					this.correct++;
-					if (this.correct >= this.num_cards)
+					if (this.correct >= this.num_pairs)
 					{
 						alert("You Win with " + Math.round(this.score) + " points.");
 						loadpage("../");
@@ -232,7 +238,11 @@ class GameScene extends Phaser.Scene
 				canClick = true;
 			}
 
-			card.card_id = arraycards[i];
+			var cardInfo = {
+				done: false
+			}
+
+			card.card_id = this.items[i];
 			i++;
 			card.setInteractive();
 			card.on('pointerup', () => {
