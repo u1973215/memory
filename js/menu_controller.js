@@ -39,7 +39,7 @@ function phaser_game()
 
 function gamemode()
 {
-	loadpage("../html/gamemode.html");
+	loadpage("./html/gamemode.html");
 }
 
 function arcade()
