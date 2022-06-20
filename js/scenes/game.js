@@ -91,15 +91,15 @@ class GameScene extends Phaser.Scene
 			switch (options_data.dificulty)
 			{
 				case "easy":
-					this.dif_mult = 10;
+					this.dif_mult = 1;
 					break;
 
 				case "normal":
-					this.dif_mult = 20;
+					this.dif_mult = 0.5;
 					break;
 
 				case "hard":
-					this.dif_mult = 40;
+					this.dif_mult = 0.25;
 					break;
 			}
 			//console.log(this.dif_mult);
@@ -217,7 +217,7 @@ class GameScene extends Phaser.Scene
 			{
 				if (this.firstClick.card_id !== card.card_id)
 				{
-					this.score -= 40/this.num_pairs;
+					this.score -= 20/this.num_pairs * (2-this.dif_mult);
 					hideCards();
 					if (this.score <= 0)
 					{
@@ -252,7 +252,7 @@ class GameScene extends Phaser.Scene
 					if (this.firstClick)
 					{
 						canClick = false;
-						this.time.delayedCall(this.cooldown, processSecondCard, this);
+						this.time.delayedCall(this.cooldown * this.dif_mult, processSecondCard, this);
 					}
 					else
 					{
