@@ -278,7 +278,7 @@ class GameScene extends Phaser.Scene
 			////////////////////////////////////////
 			var json = localStorage.getItem("config") || '{"cards": 3,"dificulty": "hard"}';
 			var options_data = JSON.parse(json);
-			this.num_pairs = options_data.cards;
+			this.num_pairs = parseInt(options_data.cards);
 
 			switch (options_data.dificulty)
 			{
