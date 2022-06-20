@@ -18,6 +18,8 @@ function start_game(){
 
 function phaser_game()
 {
+	localStorage.setItem("arcade", 0);
+
 	name = prompt("User name");
 	if (name != "null") // Al apretar cancel, no fa res
 	{
@@ -31,13 +33,29 @@ function phaser_game()
 		}
 		sessionStorage.setItem("username", name);
 
-		loadpage("./html/phasergame.html");
+		loadpage("../html/phasergame.html");
 	}
+}
+
+function gamemode()
+{
+	loadpage("../html/gamemode.html");
+}
+
+function arcade()
+{
+	phaser_game();
+	localStorage.setItem("arcade", 1);
+}
+
+function mainmenu()
+{
+	loadpage("../")
 }
 
 function ranking()
 {
-
+	loadpage("./html/load.html");
 }
 
 function options()

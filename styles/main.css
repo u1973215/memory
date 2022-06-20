@@ -33,21 +33,8 @@ a
 	width: 500px;
 	font-size: 6em;
 	line-height: 1em;
-	grid-area: title;
 }
 
-.menu
-{
-	margin: 20vh 20% 0 20%;
-	display: grid;
-	grid-template-columns: repeat(3,1fr);
-	grid-template-areas:
-		'. title .'
-		'left middle right'
-		'. cookie .';
-	gap: 30px;
-	align-items: center;
-}
 
 .menu-object
 {
@@ -60,16 +47,10 @@ a
 	text-align: center;
 }
 
-#cookie-section
+#round-text
 {
-	grid-area: cookie;
-	margin-top: 65vh;
+	height: auto;
 }
-
-.pracs { grid-area: middle; }
-#start { grid-area: left; }
-#options { grid-area: middle; }
-#exit { grid-area: right; }
 
 p, h1
 {
