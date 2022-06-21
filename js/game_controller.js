@@ -15,9 +15,8 @@ var gameObj = function (){
 				this.username = l_partida.username;
 			}
 			else{
-				this.username = sessionStorage.getItem("username","unknown");
+				this.username = localStorage.getItem("username","unknown");
 			}
-			//sessionStorage.clear();
 		}
 	});
 	return {};
